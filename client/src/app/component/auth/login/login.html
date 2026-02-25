@@ -1,0 +1,32 @@
+<div class="flex align-items-center justify-content-center min-h-screen p-4" style="background-color: #f8fafc; direction: rtl;">
+    <div class="surface-card p-6 shadow-2 border-round w-full" style="max-width: 850px;">        
+        <div *ngIf="errorMessage" class="mb-4">
+            <p-message severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+        </div>
+        <div class="grid">
+            <div class="col-12 md:col-6 flex flex-column gap-3">
+                <h2 class="text-900 font-bold mb-2">התחברות</h2>
+                <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-3">
+                    <div class="p-fluid">
+                        <label class="block font-medium mb-2">אימייל</label>
+                        <input pInputText formControlName="email" placeholder="example@mail.com" />
+                    </div>
+                    <div class="p-fluid">
+                        <label class="block font-medium mb-2">סיסמה</label>
+                        <input pInputText type="password" formControlName="password" placeholder="הכנס סיסמה" />
+                    </div>
+                    <p-button type="submit" label="התחברות" icon="pi pi-sign-in" [loading]="loading" styleClass="w-full bg-gray-900 border-none py-3"></p-button>
+                </form>
+            </div>
+            <div class="col-12 md:col-1 flex align-items-center justify-content-center">
+                <p-divider layout="vertical" class="hidden md:flex"><b>או</b></p-divider>
+                <p-divider layout="horizontal" class="flex md:hidden" align="center"><b>או</b></p-divider>
+            </div>
+            <div class="col-12 md:col-5 flex flex-column align-items-center justify-content-center gap-3">
+                <h3 class="text-900 m-0">חדש/ה כאן?</h3>
+                <p class="text-600 text-center">הצטרפי אלינו עוד היום!</p>
+                <p-button label="הרשמה לחשבון חדש" icon="pi pi-user-plus" severity="success" routerLink="/register" styleClass="w-full py-3"></p-button>
+            </div>
+        </div>
+    </div>
+</div>

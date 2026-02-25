@@ -1,0 +1,114 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="prizes-container">
+  <div class="header-section">
+    <div class="controls">
+      <span class="search-box">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          [(ngModel)]="searchText"
+          placeholder="חיפוש..."
+          type="text"
+        />
+      </span>
+      <p-select
+        [(ngModel)]="selectedSort"
+        [options]="sortOptions"
+        optionLabel="label"
+        placeholder="מיון"
+        [showClear]="true"
+      ></p-select>
+    </div>
+  </div>
+
+  <div class="info-bar">
+    <i class="pi pi-info-circle"></i>
+    <span>{{ filteredAndSortedPrizes.length }} פרסים זמינים</span>
+  </div>
+
+  <div class="grid-container" *ngIf="filteredAndSortedPrizes.length > 0">
+    <p-card class="prize-card" *ngFor="let p of filteredAndSortedPrizes">
+      <ng-template pTemplate="header">
+        <div class="card-header">
+          <img [src]="getImageUrl(p)" [alt]="p.name" class="card-image" />
+          <p-tag
+            [value]="statusLabel(p)"
+            [severity]="statusSeverity(p)"
+            class="status"
+          ></p-tag>
+          <div class="quick-actions">
+            <p-button
+              *ngIf="!isRaffled(p)"
+              icon="pi pi-shopping-cart"
+              [rounded]="true"
+              [text]="true"
+              severity="success"
+              [disabled]="!canBuy(p)"
+              (click)="addToCart(p)"
+            ></p-button>
+            <p-button
+              *ngIf="isManager"
+              icon="pi pi-bolt"
+              [rounded]="true"
+              [text]="true"
+              severity="warn"
+              [disabled]="isRaffled(p) || isRaffling"
+              (click)="rafflePrize(p)"
+            ></p-button>
+          </div>
+        </div>
+      </ng-template>
+
+      <div class="card-content">
+        <h3>{{ p.name }}</h3>
+        <p class="category">{{ categoryLabel(p) }}</p>
+        <p class="description">{{ p.description }}</p>
+        <p-divider></p-divider>
+
+        <div class="price-row">
+          <span class="price">₪{{ p.ticketPrice }}</span>
+          <div *ngIf="isRaffled(p) && getWinnerText(p)">
+            <p-tag
+              [value]="'🎉 ' + getWinnerText(p)"
+              icon="pi pi-trophy"
+              severity="warn"
+            ></p-tag>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <p-button
+            *ngIf="!isRaffled(p) && !isManager"
+            label="קנה"
+            icon="pi pi-shopping-cart"
+            [disabled]="!canBuy(p)"
+            severity="success"
+            (click)="addToCart(p)"
+          ></p-button>
+          <p-button
+            *ngIf="isManager && !isRaffled(p)"
+            label="הגרל"
+            icon="pi pi-bolt"
+            severity="warn"
+            [loading]="isRaffling"
+            [disabled]="isRaffling || p.isRaffleDone"
+            (click)="rafflePrize(p)"
+          ></p-button>
+          <p-button
+            *ngIf="isRaffled(p)"
+            label="הוגרל"
+            icon="pi pi-check-circle"
+            severity="secondary"
+            disabled
+          ></p-button>
+        </div>
+      </div>
+    </p-card>
+  </div>
+
+  <div class="empty" *ngIf="filteredAndSortedPrizes.length === 0">
+    <i class="pi pi-search"></i>
+    <p>אין פרסים תואמים</p>
+  </div>
+</div>

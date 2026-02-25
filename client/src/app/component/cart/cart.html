@@ -1,0 +1,41 @@
+<div class="card p-4" style="direction: rtl;">
+  <h2>הסל שלי</h2>
+
+  @if (cartService.cartItems().length > 0) {
+    <p-orderlist [value]="cartService.cartItems()" [responsive]="true" header="פריטים שבחרת">
+      <ng-template let-item #item>
+        <div class="flex flex-wrap p-2 items-center gap-4 w-full border-bottom-1 surface-border">
+          <img [src]="'http://localhost:4200/img/' + item.imagePath" [alt]="item.prizeName" 
+            style="width: 80px" class="rounded shadow-sm" />
+          
+          <div class="flex-1 flex flex-col">
+            <span class="font-bold text-xl">{{ item.prizeName }}</span>
+            <span class="text-sm text-500">מחיר כרטיס: {{ item.ticketPrice }} ₪</span>
+          </div>
+
+          <div class="flex flex-column align-items-end gap-2">
+            <p-inputNumber [(ngModel)]="item.quantity" [showButtons]="true" buttonLayout="horizontal" 
+                           spinnerMode="horizontal" [min]="1" (onInput)="onQuantityChange(item)"
+                           decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary">
+            </p-inputNumber>
+            <span class="font-bold">סה"כ: {{ item.ticketPrice * item.quantity }} ₪</span>
+            <p-button icon="pi pi-trash" severity="danger" [text]="true" (click)="deleteItem(item.id)"></p-button>
+          </div>
+        </div>
+      </ng-template>
+    </p-orderlist>
+
+    <div class="mt-4 p-4 surface-100 border-round flex justify-content-between align-items-center shadow-1">
+      <span class="text-2xl font-bold">סה"כ לתשלום: {{ totalPrice }} ₪</span>
+      <p-button label="המשך לתשלום" icon="pi pi-credit-card" severity="success" size="large"
+        [loading]="isPaying" [disabled]="isPaying" (click)="payNow()"></p-button>
+      <canvas #confettiCanvas class="confetti-canvas"></canvas>
+    </div>
+  } @else {
+    <div class="text-center p-8 surface-50 border-round">
+      <i class="pi pi-shopping-bag" style="font-size: 5rem; color: var(--surface-400);"></i>
+      <h3 class="text-xl mt-4">הסל שלך מחכה שתמלאי אותו...</h3>
+      <p-button label="לכל המתנות" routerLink="/getAllPrizes" icon="pi pi-arrow-left" class="mt-3"></p-button>
+    </div>
+  }
+</div>

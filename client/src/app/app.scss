@@ -1,0 +1,113 @@
+:host {
+  display: block;
+  min-height: 100vh;
+ // direction: rtl;
+}
+
+.content-container {
+  padding: 1.75rem 1.5rem 3rem;
+}
+
+.menubar-start,
+.menubar-end {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menubar-start {
+  gap: 1rem;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.brand:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px -18px rgba(15, 23, 42, 0.6);
+}
+
+.brand-logo {
+  width: clamp(90px, 12vw, 140px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.18));
+}
+
+.username-display {
+  color: var(--text-color, #0f172a);
+  font-weight: 600;
+  margin-left: 0.35rem;
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .app-menubar.p-menubar {
+  margin: 1.25rem 1.5rem 0;
+  border-radius: 20px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow-soft);
+  padding: 0.35rem 0.75rem;
+}
+
+:host ::ng-deep .app-menubar .p-menubar-root-list {
+  gap: 0.25rem;
+}
+
+:host ::ng-deep .app-menubar .p-button.p-button-text {
+  color: var(--text-color, #0f172a);
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.55rem 0.95rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+:host ::ng-deep .app-menubar .p-button.p-button-text:hover {
+  background: rgba(99, 102, 241, 0.12);
+  transform: translateY(-1px);
+}
+
+:host ::ng-deep .app-menubar .p-button.p-button-secondary {
+  background: rgba(99, 102, 241, 0.18);
+  color: var(--text-color, #0f172a);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+}
+
+:host ::ng-deep .app-menubar .p-button.p-button-secondary:hover {
+  background: rgba(99, 102, 241, 0.26);
+}
+
+:host ::ng-deep .app-menubar .p-menubar-end {
+  gap: 0.4rem;
+}
+
+@media (max-width: 900px) {
+  :host ::ng-deep .app-menubar.p-menubar {
+    margin: 0.75rem 0.75rem 0;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .content-container {
+    padding: 1.25rem 0.9rem 2.5rem;
+  }
+
+  .menubar-start,
+  .menubar-end,
+  .nav-links {
+    flex-wrap: wrap;
+  }
+}

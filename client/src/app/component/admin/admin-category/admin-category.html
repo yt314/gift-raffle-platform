@@ -1,0 +1,200 @@
+<div class="category-management-container">
+    <p-card class="main-card">
+        <ng-template pTemplate="header">
+            <div class="header-section">
+                <h2 class="title">
+                    <i class="pi pi-list"></i>
+                    ניהול קטגוריות
+                </h2>
+            </div>
+        </ng-template>
+
+        @if (isLoading) {
+        <div class="loading-container">
+            <p-progressSpinner></p-progressSpinner>
+            <p>טוען נתונים...</p>
+        </div>
+        } @else {
+        <div class="content-section">
+            <p-card class="card-section table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <h3>
+                            <i class="pi pi-database"></i>
+                            רשימת הקטגוריות
+                        </h3>
+                    </div>
+                </ng-template>
+
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <p-button
+                            label="הוסף קטגוריה חדשה"
+                            icon="pi pi-plus"
+                            (onClick)="openCreateDialog()"
+                            severity="success"
+                            [raised]="true"
+                        ></p-button>
+                    </div>
+                    <div class="toolbar-right">
+                        <p-button
+                            label="ייצא ל-Excel"
+                            icon="pi pi-download"
+                            (onClick)="exportToExcel()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <p-button
+                            label="ייבא מ-Excel"
+                            icon="pi pi-upload"
+                            (onClick)="fileInput.click()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <input
+                            #fileInput
+                            type="file"
+                            accept=".xlsx,.xls"
+                            (change)="onFileSelected($event)"
+                            style="display: none"
+                        />
+                    </div>
+                </div>
+
+                @if (categories.length > 0) {
+                <p-table [value]="categories" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="id">
+                                ID
+                                <p-sortIcon field="id"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="name">
+                                שם
+                                <p-sortIcon field="name"></p-sortIcon>
+                            </th>
+                            <th>פעולות</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-category>
+                        <tr>
+                            <td>
+                                <span class="id-badge">{{ category.id }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ category.name }}</strong>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <p-button
+                                        icon="pi pi-pencil"
+                                        (onClick)="openEditDialog(category)"
+                                        [rounded]="true"
+                                        [text]="true"
+                                        severity="info"
+                                        pTooltip="עריכה"
+                                        tooltipPosition="top"
+                                    ></p-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="3" class="text-center">
+                                <p>אין קטגוריות זמינות</p>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                } @else {
+                <div class="empty-state">
+                    <i class="pi pi-inbox"></i>
+                    <p>אין קטגוריות עדיין. הוסף קטגוריה ראשונה שלך!</p>
+                </div>
+                }
+            </p-card>
+        </div>
+        }
+    </p-card>
+</div>
+
+<p-dialog
+    [(visible)]="showCreateDialog"
+    [header]="'הוספת קטגוריה חדשה'"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }"
+    (onHide)="resetCreateForm()"
+>
+    <div class="dialog-content">
+        <div class="form-group">
+            <label for="dlg-categoryName">שם הקטגוריה</label>
+            <input
+                pInputText
+                id="dlg-categoryName"
+                type="text"
+                placeholder="הזן שם קטגוריה"
+                [(ngModel)]="newCategory.name"
+                class="w-full"
+            />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showCreateDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="הוסף"
+            icon="pi pi-check"
+            (onClick)="createCategory()"
+            severity="success"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="showEditDialog"
+    [header]="'עריכת קטגוריה: ' + (selectedCategory?.name || '')"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }"
+    (onHide)="resetEditForm()"
+>
+    <div class="dialog-content" *ngIf="selectedCategory">
+        <div class="form-group">
+            <label for="dlg-edit-categoryName">שם הקטגוריה</label>
+            <input
+                pInputText
+                id="dlg-edit-categoryName"
+                type="text"
+                placeholder="שם הקטגוריה"
+                [(ngModel)]="selectedCategory.name"
+                class="w-full"
+            />
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showEditDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="שמור שינויים"
+            icon="pi pi-save"
+            (onClick)="saveUpdate()"
+            severity="info"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>

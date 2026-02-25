@@ -1,0 +1,30 @@
+<div class="lottery-page" dir="rtl">
+  <h2>מוצרים / פרסים</h2>
+
+  @if (isLoading) {
+    <p class="muted">טוען...</p>
+  } @else {
+
+    <div class="grid">
+      @for (prize of prizes; track prize.id) {
+        <div class="card" [class.raffled]="prize.isRaffleDone">
+          <img class="img" [src]="'http://localhost:4200/img/' + prize.imagePath" alt="תמונה" />
+
+          <div class="content">
+            <div class="title">{{ prize.name }}</div>
+            <div class="desc muted">{{ prize.description }}</div>
+
+            @if (prize.isRaffleDone) {
+              <div class="badge success">🏆 הוגרל</div>
+              <div class="winner">הזוכה: <strong>{{ getWinnerLabel(prize) }}</strong></div>
+              <button class="btn buy" disabled>המוצר נעול לרכישה</button>
+            } @else {
+              <div class="badge pending">⏳ פתוח לרכישה</div>
+              <button class="btn buy" (click)="buyTicket(prize)">קנה כרטיס</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

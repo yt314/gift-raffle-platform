@@ -1,0 +1,297 @@
+<div class="user-management-container">
+    <p-card class="main-card">
+        <ng-template pTemplate="header">
+            <div class="header-section">
+                <h2 class="title">
+                    <i class="pi pi-users"></i>
+                    ניהול משתמשים
+                </h2>
+            </div>
+        </ng-template>
+
+        @if (isLoading) {
+        <div class="loading-container">
+            <p-progressSpinner></p-progressSpinner>
+            <p>טוען נתונים...</p>
+        </div>
+        } @else {
+        <div class="content-section">
+            <p-card class="card-section table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <h3>
+                            <i class="pi pi-database"></i>
+                            רשימת המשתמשים
+                        </h3>
+                    </div>
+                </ng-template>
+
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <p-button
+                            label="הוסף משתמש חדש"
+                            icon="pi pi-plus"
+                            (onClick)="openCreateDialog()"
+                            severity="success"
+                            [raised]="true"
+                        ></p-button>
+                    </div>
+                    <div class="toolbar-right">
+                        <p-button label="ייצא ל-Excel" icon="pi pi-download" (onClick)="exportToExcel()"
+                            severity="secondary" [raised]="true"></p-button>
+                        <p-button
+                            label="ייבא מ-Excel"
+                            icon="pi pi-upload"
+                            (onClick)="fileInput.click()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <input
+                            #fileInput
+                            type="file"
+                            accept=".xlsx,.xls"
+                            (change)="onFileSelected($event)"
+                            style="display: none"
+                        />
+                    </div>
+                </div>
+
+                @if (users.length > 0) {
+                <p-table [value]="users" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="id">
+                                ID
+                                <p-sortIcon field="id"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="firstName">
+                                שם פרטי
+                                <p-sortIcon field="firstName"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="lastName">
+                                שם משפחה
+                                <p-sortIcon field="lastName"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="address">
+                                כתובת
+                                <p-sortIcon field="address"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="email">
+                                אימייל
+                                <p-sortIcon field="email"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="phone">
+                                טלפון
+                                <p-sortIcon field="phone"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="role">
+                                תפקיד
+                                <p-sortIcon field="role"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="signAt">
+                                נרשם בתאריך
+                                <p-sortIcon field="signAt"></p-sortIcon>
+                            </th>
+                            <th>פעולות</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-user>
+                        <tr>
+                            <td>
+                                <span class="id-badge">{{ user.id }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ user.firstName }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.lastName }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.address }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.email }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.phone }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.role }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ user.signAt | date:'dd/MM/yyyy' }}</strong>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <p-button icon="pi pi-pencil" (onClick)="openEditDialog(user)" [rounded]="true"
+                                        [text]="true" severity="info" pTooltip="עריכה" tooltipPosition="top"></p-button>
+                                    <p-button icon="pi pi-trash" (onClick)="deleteUsers(user.id)" [rounded]="true"
+                                        [text]="true" severity="danger" pTooltip="מחיקה"
+                                        tooltipPosition="top"></p-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="4" class="text-center">
+                                <p>אין משתמשים זמינים</p>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                } @else {
+                <div class="empty-state">
+                    <i class="pi pi-inbox"></i>
+                    <p>אין משתמשים עדיין.</p>
+                </div>
+                }
+            </p-card>
+        </div>
+        }
+    </p-card>
+</div>
+
+<p-dialog
+    [(visible)]="showCreateDialog"
+    [header]="'הוספת משתמש חדש'"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }"
+    (onHide)="resetCreateForm()"
+>
+    <div class="dialog-content">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-firstName">שם פרטי</label>
+                <input
+                    pInputText
+                    id="dlg-firstName"
+                    type="text"
+                    placeholder="הזן שם פרטי"
+                    [(ngModel)]="newUser.firstName"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-lastName">שם משפחה</label>
+                <input
+                    pInputText
+                    id="dlg-lastName"
+                    type="text"
+                    placeholder="הזן שם משפחה"
+                    [(ngModel)]="newUser.lastName"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-address">כתובת</label>
+                <input
+                    pInputText
+                    id="dlg-address"
+                    type="text"
+                    placeholder="הזן כתובת"
+                    [(ngModel)]="newUser.address"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-email">אימייל</label>
+                <input
+                    pInputText
+                    id="dlg-email"
+                    type="email"
+                    placeholder="הזן אימייל"
+                    [(ngModel)]="newUser.email"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-phone">טלפון</label>
+                <input
+                    pInputText
+                    id="dlg-phone"
+                    type="text"
+                    placeholder="הזן טלפון"
+                    [(ngModel)]="newUser.phone"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-role">תפקיד</label>
+                <input
+                    pInputText
+                    id="dlg-role"
+                    type="text"
+                    placeholder="הזן תפקיד"
+                    [(ngModel)]="newUser.role"
+                    class="w-full"
+                />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showCreateDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="הוסף"
+            icon="pi pi-check"
+            (onClick)="createUser()"
+            severity="success"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showEditDialog"
+    [header]="'עריכת משתמש: ' + (selectedUser?.firstName || '') + ' ' + (selectedUser?.lastName || '')" [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }" (onHide)="resetEditForm()">
+    <div class="dialog-content" *ngIf="selectedUser">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-edit-firstName">שם פרטי</label>
+                <input pInputText id="dlg-edit-firstName" type="text" placeholder="שם פרטי"
+                    [(ngModel)]="selectedUser.firstName" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-lastName">שם משפחה</label>
+                <input pInputText id="dlg-edit-lastName" type="text" placeholder="שם משפחה"
+                    [(ngModel)]="selectedUser.lastName" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-address">כתובת</label>
+                <input pInputText id="dlg-edit-address" type="text" placeholder="כתובת"
+                    [(ngModel)]="selectedUser.address" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-email">אימייל</label>
+                <input pInputText id="dlg-edit-email" type="email" placeholder="אימייל"
+                    [(ngModel)]="selectedUser.email" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-phone">טלפון</label>
+                <input pInputText id="dlg-edit-phone" type="text" placeholder="טלפון"
+                    [(ngModel)]="selectedUser.phone" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-role">תפקיד</label>
+                <input pInputText id="dlg-edit-role" type="text" placeholder="תפקיד"
+                    [(ngModel)]="selectedUser.role" class="w-full" />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="ביטול" icon="pi pi-times" (onClick)="showEditDialog = false" severity="secondary"
+            [outlined]="true"></p-button>
+        <p-button label="שמור שינויים" icon="pi pi-save" (onClick)="saveUpdate()" severity="info"
+            [raised]="true"></p-button>
+    </ng-template>
+</p-dialog>

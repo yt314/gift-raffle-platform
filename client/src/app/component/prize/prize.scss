@@ -1,0 +1,372 @@
+
+.prizes-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.header-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1f2937;
+
+    @media (max-width: 768px) {
+      font-size: 1.875rem;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0.5rem 0 0 0;
+  }
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+
+    > * {
+      width: 100%;
+    }
+  }
+}
+
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+
+  i {
+    position: absolute;
+    left: 1rem;
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+
+  input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+  }
+}
+
+.info-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background: #f3f4f6;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #6b7280;
+
+  i {
+    flex-shrink: 0;
+  }
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.prize-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    border-color: #d1d5db;
+  }
+
+  ::ng-deep {
+    .p-card {
+      padding: 0;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .p-card-header {
+      padding: 0;
+    }
+
+    .p-card-body {
+      padding: 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.card-header {
+  position: relative;
+  overflow: hidden;
+  background: #f9fafb;
+  aspect-ratio: 4 / 3;
+
+  .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover .card-image {
+    transform: scale(1.05);
+  }
+
+  .status {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+
+    ::ng-deep {
+      .p-tag {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+      }
+    }
+  }
+}
+
+.quick-actions {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px);
+
+  ::ng-deep p-button .p-button {
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+}
+
+.card-header:hover .quick-actions {
+  opacity: 1;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex-grow: 1;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .category {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .description {
+    font-size: 0.875rem;
+    color: #4b5563;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+.price-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  .price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1f2937;
+  }
+
+  ::ng-deep p-tag .p-tag {
+    background: rgba(251, 191, 36, 0.2);
+    color: rgb(180, 83, 9);
+    font-size: 0.75rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: auto;
+
+  ::ng-deep {
+    p-button {
+      flex: 1;
+
+      .p-button {
+        width: 100%;
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+
+        &:not(:disabled) {
+          &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.15);
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #9ca3af;
+
+  i {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  p {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+  }
+}
+
+::ng-deep {
+  p-select {
+    width: 100%;
+    min-width: 150px;
+
+    .p-select {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #1f2937;
+
+      &:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+    }
+  }
+
+  p-divider {
+    margin: 1rem 0;
+    opacity: 0.5;
+  }
+
+  p-button {
+    &.p-button-success .p-button {
+      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+      border: none;
+      color: white;
+
+      &:not(:disabled):hover {
+        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      }
+    }
+
+    &.p-button-warning .p-button {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      border: none;
+      color: white;
+
+      &:not(:disabled):hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+      }
+    }
+
+    &.p-button-secondary .p-button {
+      background: #e5e7eb;
+      border: none;
+      color: #374151;
+
+      &:not(:disabled):hover {
+        background: #d1d5db;
+      }
+    }
+  }
+
+  p-tag {
+    .p-tag {
+      border-radius: 6px;
+      font-weight: 500;
+    }
+  }
+}

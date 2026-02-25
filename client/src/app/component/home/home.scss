@@ -1,0 +1,27 @@
+
+
+:host {
+  display: block;
+  min-height: 100vh;
+  direction: rtl;
+  --bg-img: url("/LOGO.png");
+  --cycle: 9s;
+  --dim: 0.6;
+}
+
+.bg-wrap {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background: #0b0b12;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: -8%;
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

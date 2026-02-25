@@ -1,0 +1,40 @@
+<p-menubar class="app-menubar" style="position: sticky; top: 0; z-index: 1000;">
+  <ng-template pTemplate="start">
+    <div class="menubar-start">
+      <a class="brand" routerLink="/" aria-label="דף הבית">
+        <img class="brand-logo" src="/BONUS.png" alt="BONUS" />
+      </a>
+      <div class="nav-links">
+        <a pButton class="p-button-text" routerLink="/getAllPrizes" routerLinkActive="p-button-secondary" label="מתנות"></a>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="end">
+    <div class="menubar-end">
+      @if (!authService.isLoggedIn()) {
+      <a pButton class="p-button-text" routerLink="/login" routerLinkActive="p-button-secondary" icon="pi pi-sign-in"></a>
+      <a pButton class="p-button-text" routerLink="/register" routerLinkActive="p-button-secondary"
+        icon="pi pi-user-plus"></a>
+      } @else {
+      <span class="username-display">{{ username() }}</span>
+      <button pButton class="p-button-text" (click)="logout()" icon="pi pi-sign-out"></button>
+      }
+ @if (authService.isManager()) {
+        <p-button
+          label="פעולות מנהל"
+          icon="pi pi-cog"
+          [text]="true"
+          (onClick)="adminMenu.toggle($event)">
+        </p-button>
+
+        <p-tieredMenu #adminMenu [model]="adminItems" [popup]="true"></p-tieredMenu>
+        }
+      <a pButton class="p-button-text" routerLink="/cart" routerLinkActive="p-button-secondary"
+        icon="pi pi-shopping-cart"></a>
+   </div>
+  </ng-template>   
+</p-menubar>
+<div class="content-container">
+  <router-outlet></router-outlet>
+</div>

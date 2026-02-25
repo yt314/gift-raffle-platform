@@ -1,0 +1,641 @@
+.prize-management-container {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .main-card {
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+
+        .header-section {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-600) 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .title {
+                margin: 0;
+                color: white;
+                font-size: 1.75rem;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+
+                i {
+                    font-size: 2rem;
+                }
+            }
+        }
+    }
+
+    .content-section {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .card-section {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        border: 1px solid var(--surface-border);
+
+        &.edit-card {
+            background-color: var(--surface-50);
+        }
+
+        &.table-card {
+            background-color: var(--surface-0);
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--surface-100);
+            border-bottom: 1px solid var(--surface-border);
+
+            h3 {
+                margin: 0;
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: var(--text-color);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+
+                i {
+                    color: var(--primary-color);
+                    font-size: 1.5rem;
+                }
+            }
+        }
+
+        :deep(.p-card-content) {
+            padding: 1.5rem;
+        }
+    }
+
+    .add-prize-form,
+    .edit-prize-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
+        }
+
+        :deep(.p-inputtext) {
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            border: 1px solid var(--surface-border);
+            transition: all 0.3s ease;
+
+            &:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px var(--primary-color-20);
+            }
+        }
+
+        input {
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            border: 1px solid var(--surface-border);
+            transition: all 0.3s ease;
+
+            &:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px var(--primary-color-20);
+            }
+        }
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+
+        :deep(.p-button) {
+            flex: 1;
+            min-width: 150px;
+
+            @media (max-width: 640px) {
+                flex: 1 0 calc(50% - 0.5rem);
+            }
+        }
+    }
+
+    .table-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.5rem;
+        background-color: var(--surface-50);
+        border-bottom: 1px solid var(--surface-border);
+        border-radius: 8px 8px 0 0;
+        flex-wrap: wrap;
+
+        .toolbar-left {
+            display: flex;
+            gap: 0.75rem;
+
+            :deep(.p-button) {
+                white-space: nowrap;
+            }
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 0.75rem;
+
+            :deep(.p-button) {
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 640px) {
+            flex-direction: column;
+            
+            .toolbar-left,
+            .toolbar-right {
+                width: 100%;
+                
+                :deep(.p-button) {
+                    flex: 1;
+                    min-width: 100%;
+                }
+            }
+        }
+    }
+
+    .dialog-content {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .table-card {
+        overflow-x: auto;
+
+        :deep(.p-datatable) {
+            background-color: transparent;
+
+            .p-datatable-thead > tr > th {
+                background-color: var(--surface-100);
+                color: var(--text-color);
+                font-weight: 600;
+                border-color: var(--surface-border);
+                padding: 1rem;
+                text-align: right;
+            }
+
+            .p-datatable-tbody > tr {
+                border-color: var(--surface-border);
+
+                > td {
+                    padding: 1rem;
+                    border-color: var(--surface-border);
+                    color: var(--text-color);
+                    vertical-align: middle;
+                }
+
+                &:hover {
+                    background-color: var(--surface-50);
+                }
+
+                &.raffled {
+                    opacity: 0.7;
+                }
+            }
+        }
+    }
+
+    .image-cell {
+        text-align: center;
+
+        .prize-image {
+            max-width: 100px;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--surface-border);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+            }
+        }
+    }
+
+    .prize-name {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .prize-description {
+        color: var(--text-color-secondary);
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+    }
+
+    .price-badge {
+        background-color: var(--success-color-20);
+        color: var(--success-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .raffle-status {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .raffled-badge {
+        background-color: var(--success-color-20);
+        color: var(--success-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+
+        i {
+            font-size: 1rem;
+        }
+    }
+
+    .pending-badge {
+        background-color: var(--warning-color-20);
+        color: var(--warning-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+
+        i {
+            font-size: 1rem;
+        }
+    }
+
+    .locked-badge {
+        background-color: var(--danger-color-20);
+        color: var(--danger-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    .error-badge {
+        background-color: var(--danger-color-20);
+        color: var(--danger-color);
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+
+        i {
+            font-size: 0.9rem;
+        }
+    }
+
+    .winner-info {
+        color: var(--text-color);
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+        background-color: var(--surface-100);
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .available-info {
+        color: var(--text-color-secondary);
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+
+        :deep(.p-button) {
+            padding: 0.5rem;
+
+            &:hover:not([disabled]) {
+                background-color: var(--primary-color-20);
+            }
+
+            &[disabled] {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+        }
+    }
+
+    .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 3rem 1.5rem;
+
+        :deep(.p-progressspinner) {
+            width: 50px;
+            height: 50px;
+        }
+
+        p {
+            color: var(--text-color-secondary);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+    }
+
+    .empty-state {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        padding: 3rem 1.5rem;
+        text-align: center;
+        color: var(--text-color-secondary);
+
+        i {
+            font-size: 3rem;
+            color: var(--surface-400);
+        }
+
+        p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+    }
+
+@media (max-width: 768px) {
+    .prize-management-container {
+        padding: 1rem;
+
+        .main-card {
+            .header-section {
+                padding: 1rem;
+
+                .title {
+                    font-size: 1.5rem;
+
+                    i {
+                        font-size: 1.5rem;
+                    }
+                }
+            }
+        }
+
+        .card-section {
+            .card-header {
+                h3 {
+                    font-size: 1.1rem;
+                }
+            }
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .form-actions {
+            flex-direction: column;
+
+            :deep(.p-button) {
+                width: 100%;
+            }
+        }
+
+        .action-buttons {
+            justify-content: center;
+        }
+
+        .table-card {
+            :deep(.p-datatable) {
+                font-size: 0.9rem;
+
+                .p-datatable-thead > tr > th {
+                    padding: 0.75rem;
+                }
+
+                .p-datatable-tbody > tr > td {
+                    padding: 0.75rem;
+                }
+            }
+        }
+
+        .image-cell {
+            .prize-image {
+                max-width: 70px;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .prize-management-container {
+        padding: 0.5rem;
+
+        .main-card {
+            .header-section {
+                .title {
+                    font-size: 1.25rem;
+                }
+            }
+        }
+
+        .content-section {
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            :deep(.p-inputtext),
+            input {
+                font-size: 16px; 
+            }
+        }
+
+        .table-responsive {
+            :deep(.p-datatable) {
+                font-size: 0.85rem;
+
+                .p-datatable-thead > tr > th {
+                    padding: 0.5rem;
+                }
+
+                .p-datatable-tbody > tr > td {
+                    padding: 0.5rem;
+                }
+            }
+        }
+    }
+}
+
+button {
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-add { background-color: #27ae60; color: white; width: 100%; margin-top: 10px; }
+.btn-save { background-color: #2980b9; color: white; }
+.btn-cancel { background-color: #95a5a6; color: white; }
+.btn-edit { background-color: #f39c12; color: white; margin-left: 5px; }
+.btn-delete { background-color: #e74c3c; color: white; }
+
+button:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+/* טבלה */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+th { background-color: #34495e; color: white; padding: 15px; text-align: right; }
+td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+tr:last-child td { border-bottom: none; }
+tr:hover { background-color: #f8f9fa; }
+
+/* ----- הגרלות ----- */
+.muted {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+tr.raffled {
+  opacity: 0.92;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85em;
+  margin-bottom: 6px;
+}
+
+.badge.success {
+  background: rgba(39, 174, 96, 0.12);
+  border: 1px solid rgba(39, 174, 96, 0.35);
+  color: #1e7f48;
+}
+
+.badge.pending {
+  background: rgba(52, 152, 219, 0.10);
+  border: 1px solid rgba(52, 152, 219, 0.30);
+  color: #1f6fa0;
+}
+
+.winner-line {
+  margin-top: 4px;
+}
+
+.raffle-error {
+  margin-top: 10px;
+  color: #c0392b;
+  font-weight: 600;
+}
+
+.btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.btn-raffle {
+  background-color: #8e44ad;
+  color: white;
+}
+
+.btn-raffle:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+:deep(.p-dialog) {
+    direction: rtl;
+
+    .p-dialog-header {
+        background-color: var(--primary-color);
+        color: white;
+        font-weight: 600;
+    }
+
+    .p-dialog-content {
+        padding: 1.5rem;
+    }
+
+    .p-dialog-footer {
+        padding: 1rem 1.5rem;
+        background-color: var(--surface-50);
+        display: flex;
+        gap: 0.75rem;
+        justify-content: flex-start;
+        border-top: 1px solid var(--surface-border);
+
+        .p-button {
+            flex: 1;
+            min-width: 120px;
+        }
+    }
+  }
+}

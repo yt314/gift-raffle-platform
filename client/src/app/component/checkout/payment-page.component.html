@@ -1,0 +1,204 @@
+<p-toast></p-toast>
+
+<div class="surface-section px-3 py-4 md:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="flex align-items-center justify-content-between mb-4">
+      <div class="flex align-items-center gap-3">
+        <div class="border-round-xl surface-100 px-3 py-2 font-bold">MyStore</div>
+        <span class="text-600">תשלום מאובטח</span>
+      </div>
+      <span class="text-600 text-sm">SSL • PCI‑Ready</span>
+    </div>
+
+    <p-steps [model]="steps" [readonly]="true" [activeIndex]="2" class="mb-4"></p-steps>
+
+    <div class="grid">
+      <div class="col-12 lg:col-7">
+        <p-card header="פרטי תשלום">
+          <form [formGroup]="form" class="p-fluid" (ngSubmit)="submit()">
+
+            <div class="grid">
+              <div class="col-12">
+                <p-floatLabel>
+                  <input pInputText id="email" type="email" formControlName="email" autocomplete="email" />
+                  <label for="email">אימייל לקבלת קבלה</label>
+                </p-floatLabel>
+                @if (fieldError('email'); as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12">
+                <p-floatLabel>
+                  <input pInputText id="cardHolderName" type="text" formControlName="cardHolderName" autocomplete="cc-name" />
+                  <label for="cardHolderName">שם בעל/ת הכרטיס</label>
+                </p-floatLabel>
+                @if (fieldError('cardHolderName') ;as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12">
+                <p-floatLabel>
+                  <p-inputMask
+                    inputId="cardNumber"
+                    formControlName="cardNumber"
+                    mask="9999 9999 9999 9999"
+                    [autoClear]="false"
+                    autocomplete="cc-number"
+                  ></p-inputMask>
+                  <label for="cardNumber">מספר כרטיס</label>
+                </p-floatLabel>
+                @if (fieldError('cardNumber') ;as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-6">
+                <p-floatLabel>
+                  <p-inputMask
+                    inputId="expiry"
+                    formControlName="expiry"
+                    mask="99/99"
+                    [autoClear]="false"
+                    autocomplete="cc-exp"
+                  ></p-inputMask>
+                  <label for="expiry">תוקף (MM/YY)</label>
+                </p-floatLabel>
+                @if (fieldError('expiry'); as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-6">
+                <p-floatLabel>
+                  <p-inputMask
+                    inputId="cvv"
+                    formControlName="cvv"
+                    mask="9999"
+                    [autoClear]="false"
+                    autocomplete="cc-csc"
+                  ></p-inputMask>
+                  <label for="cvv">CVV</label>
+                </p-floatLabel>
+                @if (fieldError('cvv'); as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12">
+                <p-checkbox formControlName="saveCard" inputId="saveCard" binary="true"></p-checkbox>
+                <label for="saveCard" class="ml-2">שמור כרטיס לתשלומים עתידיים</label>
+              </div>
+            </div>
+
+            <p-divider></p-divider>
+
+            <div class="text-lg font-semibold mb-2">כתובת לחיוב</div>
+
+            <div formGroupName="billing" class="grid">
+              <div class="col-12 md:col-6">
+                <p-floatLabel>
+                  <input pInputText id="country" type="text" formControlName="country" autocomplete="country-name" />
+                  <label for="country">מדינה</label>
+                </p-floatLabel>
+                @if (fieldError('billing.country') ;as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12 md:col-6">
+                <p-floatLabel>
+                  <input pInputText id="city" type="text" formControlName="city" autocomplete="address-level2" />
+                  <label for="city">עיר</label>
+                </p-floatLabel>
+                @if (fieldError('billing.city'); as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12">
+                <p-floatLabel>
+                  <input pInputText id="address1" type="text" formControlName="address1" autocomplete="address-line1" />
+                  <label for="address1">כתובת</label>
+                </p-floatLabel>
+                @if (fieldError('billing.address1'); as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+
+              <div class="col-12 md:col-6">
+                <p-floatLabel>
+                  <input pInputText id="zip" type="text" formControlName="zip" autocomplete="postal-code" />
+                  <label for="zip">מיקוד</label>
+                </p-floatLabel>
+                @if (fieldError('billing.zip') ;as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+            </div>
+
+            <p-divider></p-divider>
+
+            <div class="col-12 mb-3">
+              <p-checkbox formControlName="acceptTerms" inputId="acceptTerms" binary="true"></p-checkbox>
+              <label for="acceptTerms" class="ml-2">אני מאשר/ת תנאי שימוש ומדיניות פרטיות</label>
+              <div>
+                @if (fieldError('acceptTerms') ;as err) {
+                  <small class="p-error">{{ err }}</small>
+                }
+              </div>
+            </div>
+
+            <div class="flex gap-2 justify-content-end">
+              <button
+                pButton
+                type="submit"
+                label="שלם עכשיו"
+                icon="pi pi-lock"
+                [loading]="processing()"
+                [disabled]="form.invalid || processing()"
+              ></button>
+            </div>
+
+          </form>
+        </p-card>
+      </div>
+
+      <div class="col-12 lg:col-5">
+        <p-card header="סיכום הזמנה">
+          <div class="flex flex-column gap-3">
+            @for (item of cart(); track $index) {
+              <div class="flex justify-content-between">
+                <div>
+                  <div class="font-medium">{{ item.prizeName }}</div>
+                  <div class="text-600 text-sm">כמות: {{ item.quantity }} • מחיר ליחידה: {{ item.ticketPrice |currency:'ILS'}}</div>
+                </div>
+                <div class="font-medium">{{ (item.quantity * item.ticketPrice) | currency:'ILS':'symbol':'1.2-2' }}</div>
+              </div>
+            }
+
+            <p-divider></p-divider>
+
+            <div class="flex justify-content-between text-600">
+              <span>סכום ביניים</span>
+              <span>{{ subtotal() | currency:'ILS':'symbol':'1.2-2' }}</span>
+            </div>
+
+            <p-divider></p-divider>
+
+            <div class="flex justify-content-between text-xl font-semibold">
+              <span>סה״כ לתשלום</span>
+              <span>{{ total() | currency:'ILS':'symbol':'1.2-2' }}</span>
+            </div>
+
+            <div class="text-600 text-sm">
+              בלחיצה על “שלם עכשיו” התשלום יעובד בצורה מאובטחת.
+            </div>
+          </div>
+        </p-card>
+      </div>
+    </div>
+  </div>
+</div>

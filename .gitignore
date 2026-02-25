@@ -1,0 +1,25 @@
+# ===== Angular / Node =====
+client/node_modules/
+client/dist/
+client/.angular/
+client/.cache/
+npm-debug.log*
+yarn-error.log*
+
+# ===== .NET / Visual Studio =====
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.suo
+**/*.rsuser
+**/*.csproj.user
+
+# ===== Secrets / local env =====
+**/.env
+server/**/appsettings.json
+server/**/appsettings.Development.json
+
+# ===== Logs / Reports =====
+server/**/Logs/
+server/**/Reports/

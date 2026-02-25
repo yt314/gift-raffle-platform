@@ -1,0 +1,64 @@
+<p-toast></p-toast>
+
+<div class="card flex justify-content-center mt-5" dir="rtl">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-4 p-5 shadow-2 border-round w-full md:w-30rem bg-white">
+        <h2 class="text-center m-0">יצירת חשבון חדש</h2>
+
+        <div class="flex gap-2">
+            <div class="flex-1">
+                <span class="p-float-label">
+                    <input pInputText id="firstName" formControlName="firstName" class="w-full" />
+                    <label for="firstName">שם פרטי</label>
+                </span>
+            </div>
+            <div class="flex-1">
+                <span class="p-float-label">
+                    <input pInputText id="lastName" formControlName="lastName" class="w-full" />
+                    <label for="lastName">שם משפחה</label>
+                </span>
+            </div>
+        </div>
+
+        <div class="flex flex-column gap-1">
+            <span class="p-float-label">
+                <input pInputText id="email" formControlName="email" class="w-full" />
+                <label for="email">אימייל</label>
+            </span>
+            <small *ngIf="form.get('email')?.invalid && form.get('email')?.dirty" class="p-error">
+                כתובת אימייל לא תקינה
+            </small>
+        </div>
+
+        <div class="flex flex-column gap-1">
+            <span class="p-float-label">
+                <p-password id="password" formControlName="password" [toggleMask]="true" styleClass="w-full" inputStyleClass="w-full"></p-password>
+                <label for="password">סיסמה</label>
+            </span>
+            <small *ngIf="form.get('password')?.invalid && form.get('password')?.dirty" class="p-error">
+                הסיסמה חייבת להכיל לפחות 6 תווים
+            </small>
+        </div>
+
+        <div class="flex flex-column gap-1">
+            <span class="p-float-label">
+                <input pInputText id="phone" formControlName="phone" pKeyFilter="num" class="w-full" />
+                <label for="phone">טלפון </label>
+            </span>
+            <small *ngIf="form.get('phone')?.errors?.['pattern']" class="p-error">
+                נא להזין מספרים בלבד
+            </small>
+        </div>
+
+        <span class="p-float-label">
+            <input pInputText id="address" formControlName="address" class="w-full" />
+            <label for="address">כתובת</label>
+        </span>
+
+        <p-button label="הירשמי עכשיו" icon="pi pi-user-plus" type="submit" [disabled]="form.invalid" styleClass="w-full p-button-lg"></p-button>
+        
+        <div class="text-center mt-2">
+            <span>כבר יש לך חשבון? </span>
+            <a routerLink="/login" class="font-bold no-underline text-primary">התחברי כאן</a>
+        </div>
+    </form>
+</div>

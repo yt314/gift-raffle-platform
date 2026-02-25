@@ -1,0 +1,401 @@
+<div class="prize-management-container">
+    <p-card class="main-card">
+        <ng-template pTemplate="header">
+            <div class="header-section">
+                <h2 class="title">
+                    <i class="pi pi-gift"></i>
+                    ניהול פרסים
+                </h2>
+            </div>
+        </ng-template>
+
+        @if (isLoading) {
+        <div class="loading-container">
+            <p-progressSpinner></p-progressSpinner>
+            <p>טוען נתונים...</p>
+        </div>
+        } @else {
+        <div class="content-section">
+            
+            <p-card class="card-section table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <h3>
+                            <i class="pi pi-database"></i>
+                            רשימת הפרסים
+                        </h3>
+                    </div>
+                </ng-template>
+
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <p-button
+                            label="הוסף פרס חדש"
+                            icon="pi pi-plus"
+                            (onClick)="openCreateDialog()"
+                            severity="success"
+                            [raised]="true"
+                        ></p-button>
+                    </div>
+                    <div class="toolbar-right">
+                        <p-button
+                            label="ייצא ל-Excel"
+                            icon="pi pi-download"
+                            (onClick)="exportToExcel()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <p-button
+                            label="ייבא מ-Excel"
+                            icon="pi pi-upload"
+                            (onClick)="fileInput.click()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <input
+                            #fileInput
+                            type="file"
+                            accept=".xlsx,.xls"
+                            (change)="onFileSelected($event)"
+                            style="display: none"
+                        />
+                    </div>
+                </div>
+
+                @if (prizes.length > 0) {
+                <div class="table-responsive">
+                    <p-table [value]="prizes" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>תמונה</th>
+                                <th pSortableColumn="name">
+                                    פרס
+                                    <p-sortIcon field="name"></p-sortIcon>
+                                </th>
+                                <th>תיאור</th>
+                                <th>מחיר כרטיס</th>
+                                <th>סטטוס הגרלה</th>
+                                <th>פעולות</th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-prize>
+                            <tr [class.raffled]="prize.isRaffleDone">
+                                <td class="image-cell">
+                                    <img
+                                        [src]="'http://localhost:4200/img/' + prize.imagePath"
+                                        alt="תמונת פרס"
+                                        class="prize-image"
+                                        pTooltip="עצור לתצוגה גדולה"
+                                        tooltipPosition="top"
+                                    />
+                                </td>
+                                <td>
+                                    <div class="prize-name">
+                                        <strong>{{ prize.name }}</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="prize-description">{{ prize.description }}</div>
+                                </td>
+                                <td>
+                                    <span class="price-badge">₪{{ prize.ticketPrice }}</span>
+                                </td>
+                                <td>
+                                    <div class="raffle-status">
+                                        @if (prize.isRaffleDone) {
+                                        <div class="raffled-badge">
+                                            <i class="pi pi-check-circle"></i>
+                                            הוגרל
+                                        </div>
+                                        <div class="winner-info">
+                                            הזוכה: <strong>{{ getWinnerLabel(prize) }}</strong>
+                                        </div>
+                                        <div class="locked-badge">
+                                            <i class="pi pi-lock"></i>
+                                            נעול לרכישה
+                                        </div>
+                                        } @else {
+                                        <div class="pending-badge">
+                                            <i class="pi pi-clock"></i>
+                                            טרם הוגרל
+                                        </div>
+                                        <div class="available-info">
+                                            ניתן לקנות כרטיסים
+                                        </div>
+                                        }
+
+                                        @if (raffleErrorByPrizeId[prize.id]) {
+                                        <div class="error-badge">
+                                            <i class="pi pi-exclamation-triangle"></i>
+                                            {{ raffleErrorByPrizeId[prize.id] }}
+                                        </div>
+                                        }
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <p-button
+                                            icon="pi pi-pencil"
+                                            (onClick)="openEditDialog(prize)"
+                                            [rounded]="true"
+                                            [text]="true"
+                                            severity="info"
+                                            pTooltip="עריכה"
+                                            tooltipPosition="top"
+                                        ></p-button>
+                                        <p-button
+                                            icon="pi pi-trash"
+                                            (onClick)="deletePrize(prize.id)"
+                                            [rounded]="true"
+                                            [text]="true"
+                                            severity="danger"
+                                            pTooltip="מחיקה"
+                                            tooltipPosition="top"
+                                        ></p-button>
+
+                                        @if (isManager) {
+                                        <p-button
+                                            [icon]="rafflingPrizeId === prize.id ? 'pi pi-spin pi-spinner' : 'pi pi-bolt'"
+                                            [label]="
+                                                rafflingPrizeId === prize.id
+                                                    ? 'מגריל...'
+                                                    : 'הגרל'
+                                            "
+                                            (onClick)="rafflePrize(prize)"
+                                            [disabled]="prize.isRaffleDone || rafflingPrizeId === prize.id"
+                                            severity="warn"
+                                            [raised]="true"
+                                            pTooltip="הגרל את הפרס – אחרי ההגרלה לא ניתן לקנות אותו"
+                                            tooltipPosition="top"
+                                        ></p-button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <p>אין פרסים זמינים</p>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                } @else {
+                <div class="empty-state">
+                    <i class="pi pi-inbox"></i>
+                    <p>אין פרסים עדיין. הוסף פרס ראשון שלך!</p>
+                </div>
+                }
+            </p-card>
+        </div>
+        }
+    </p-card>
+</div>
+
+<p-dialog
+    [(visible)]="showCreateDialog"
+    [header]="'הוספת פרס חדש'"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '600px' }"
+    (onHide)="resetCreateForm()"
+>
+    <div class="dialog-content">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-prizeName">שם הפרס</label>
+                <input
+                    pInputText
+                    id="dlg-prizeName"
+                    type="text"
+                    placeholder="הזן שם הפרס"
+                    [(ngModel)]="newPrize.name"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-prizeDescription">תיאור הפרס</label>
+                <input
+                    pInputText
+                    id="dlg-prizeDescription"
+                    type="text"
+                    placeholder="הזן תיאור הפרס"
+                    [(ngModel)]="newPrize.description"
+                    class="w-full"
+                />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-donorId">קוד תורם</label>
+                <input
+                    pInputText
+                    id="dlg-donorId"
+                    type="number"
+                    placeholder="קוד תורם"
+                    [(ngModel)]="newPrize.donorId"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-categoryId">קוד קטגוריה</label>
+                <input
+                    pInputText
+                    id="dlg-categoryId"
+                    type="number"
+                    placeholder="קוד קטגוריה"
+                    [(ngModel)]="newPrize.categoryId"
+                    class="w-full"
+                />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-ticketPrice">מחיר כרטיס (₪)</label>
+                <input
+                    pInputText
+                    id="dlg-ticketPrice"
+                    type="number"
+                    placeholder="0.00"
+                    [(ngModel)]="newPrize.ticketPrice"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-imagePath">כתובת תמונה (URL)</label>
+                <input
+                    pInputText
+                    id="dlg-imagePath"
+                    type="text"
+                    placeholder="https://..."
+                    [(ngModel)]="newPrize.imagePath"
+                    class="w-full"
+                />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showCreateDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="הוסף פרס"
+            icon="pi pi-check"
+            (onClick)="createPrize()"
+            severity="success"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog
+    [(visible)]="showEditDialog"
+    [header]="'עריכת פרס: ' + (selectedPrize?.name || '')"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '600px' }"
+    (onHide)="resetEditForm()"
+>
+    <div class="dialog-content" *ngIf="selectedPrize">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-edit-prizeName">שם הפרס</label>
+                <input
+                    pInputText
+                    id="dlg-edit-prizeName"
+                    type="text"
+                    placeholder="שם הפרס"
+                    [(ngModel)]="selectedPrize.name"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-prizeDescription">תיאור הפרס</label>
+                <input
+                    pInputText
+                    id="dlg-edit-prizeDescription"
+                    type="text"
+                    placeholder="תיאור הפרס"
+                    [(ngModel)]="selectedPrize.description"
+                    class="w-full"
+                />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-edit-donorId">קוד תורם</label>
+                <input
+                    pInputText
+                    id="dlg-edit-donorId"
+                    type="number"
+                    placeholder="קוד תורם"
+                    [(ngModel)]="selectedPrize.donorId"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-categoryId">קוד קטגוריה</label>
+                <input
+                    pInputText
+                    id="dlg-edit-categoryId"
+                    type="number"
+                    placeholder="קוד קטגוריה"
+                    [(ngModel)]="selectedPrize.categoryId"
+                    class="w-full"
+                />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-edit-ticketPrice">מחיר כרטיס (₪)</label>
+                <input
+                    pInputText
+                    id="dlg-edit-ticketPrice"
+                    type="number"
+                    placeholder="0.00"
+                    [(ngModel)]="selectedPrize.ticketPrice"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-imagePath">כתובת תמונה (URL)</label>
+                <input
+                    pInputText
+                    id="dlg-edit-imagePath"
+                    type="text"
+                    placeholder="https://..."
+                    [(ngModel)]="selectedPrize.imagePath"
+                    class="w-full"
+                />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showEditDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="שמור שינויים"
+            icon="pi pi-save"
+            (onClick)="saveUpdate()"
+            severity="info"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>

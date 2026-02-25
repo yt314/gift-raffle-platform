@@ -1,0 +1,244 @@
+<div class="donor-management-container">
+    <p-card class="main-card">
+        <ng-template pTemplate="header">
+            <div class="header-section">
+                <h2 class="title">
+                    <i class="pi pi-users"></i>
+                    ניהול תורמים
+                </h2>
+            </div>
+        </ng-template>
+
+        @if (isLoading) {
+        <div class="loading-container">
+            <p-progressSpinner></p-progressSpinner>
+            <p>טוען נתונים...</p>
+        </div>
+        } @else {
+        <div class="content-section">
+            <p-card class="card-section table-card">
+                <ng-template pTemplate="header">
+                    <div class="card-header">
+                        <h3>
+                            <i class="pi pi-database"></i>
+                            רשימת התורמים
+                        </h3>
+                    </div>
+                </ng-template>
+
+                <div class="table-toolbar">
+                    <div class="toolbar-left">
+                        <p-button
+                            label="הוסף תורם חדש"
+                            icon="pi pi-plus"
+                            (onClick)="openCreateDialog()"
+                            severity="success"
+                            [raised]="true"
+                        ></p-button>
+                    </div>
+                    <div class="toolbar-right">
+                        <p-button label="ייצא ל-Excel" icon="pi pi-download" (onClick)="exportToExcel()"
+                            severity="secondary" [raised]="true"></p-button>
+                        <p-button
+                            label="ייבא מ-Excel"
+                            icon="pi pi-upload"
+                            (onClick)="fileInput.click()"
+                            severity="secondary"
+                            [raised]="true"
+                        ></p-button>
+                        <input
+                            #fileInput
+                            type="file"
+                            accept=".xlsx,.xls"
+                            (change)="onFileSelected($event)"
+                            style="display: none"
+                        />
+                    </div>
+                </div>
+
+                @if (donors.length > 0) {
+                <p-table [value]="donors" [tableStyle]="{ 'min-width': '50rem' }" responsiveLayout="scroll">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="id">
+                                ID
+                                <p-sortIcon field="id"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="firstName">
+                                שם פרטי
+                                <p-sortIcon field="firstName"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="lastName">
+                                שם משפחה
+                                <p-sortIcon field="lastName"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="email">
+                                אימייל
+                                <p-sortIcon field="email"></p-sortIcon>
+                            </th>
+                            <th pSortableColumn="phone">
+                                טלפון
+                                <p-sortIcon field="phone"></p-sortIcon>
+                            </th>
+                            <th>פעולות</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="body" let-donor>
+                        <tr>
+                            <td>
+                                <span class="id-badge">{{ donor.id }}</span>
+                            </td>
+                            <td>
+                                <strong>{{ donor.firstName }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ donor.lastName }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ donor.email }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{ donor.phone }}</strong>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <p-button icon="pi pi-pencil" (onClick)="openEditDialog(donor)" [rounded]="true"
+                                        [text]="true" severity="info" pTooltip="עריכה" tooltipPosition="top"></p-button>
+                                    <p-button icon="pi pi-trash" (onClick)="deleteDonor(donor.id)" [rounded]="true"
+                                        [text]="true" severity="danger" pTooltip="מחיקה"
+                                        tooltipPosition="top"></p-button>
+                                </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <p>אין תורמים זמינים</p>
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+                } @else {
+                <div class="empty-state">
+                    <i class="pi pi-inbox"></i>
+                    <p>אין תורמים עדיין.</p>
+                </div>
+                }
+            </p-card>
+        </div>
+        }
+    </p-card>
+</div>
+
+<p-dialog
+    [(visible)]="showCreateDialog"
+    [header]="'הוספת תורם חדש'"
+    [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }"
+    (onHide)="resetCreateForm()"
+>
+    <div class="dialog-content">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-firstName">שם פרטי</label>
+                <input
+                    pInputText
+                    id="dlg-firstName"
+                    type="text"
+                    placeholder="הזן שם פרטי"
+                    [(ngModel)]="newDonor.firstName"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-lastName">שם משפחה</label>
+                <input
+                    pInputText
+                    id="dlg-lastName"
+                    type="text"
+                    placeholder="הזן שם משפחה"
+                    [(ngModel)]="newDonor.lastName"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-email">אימייל</label>
+                <input
+                    pInputText
+                    id="dlg-email"
+                    type="email"
+                    placeholder="הזן אימייל"
+                    [(ngModel)]="newDonor.email"
+                    class="w-full"
+                />
+            </div>
+            <div class="form-group">
+                <label for="dlg-phone">טלפון</label>
+                <input
+                    pInputText
+                    id="dlg-phone"
+                    type="text"
+                    placeholder="הזן טלפון"
+                    [(ngModel)]="newDonor.phone"
+                    class="w-full"
+                />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button
+            label="ביטול"
+            icon="pi pi-times"
+            (onClick)="showCreateDialog = false"
+            severity="secondary"
+            [outlined]="true"
+        ></p-button>
+        <p-button
+            label="הוסף"
+            icon="pi pi-check"
+            (onClick)="createDonor()"
+            severity="success"
+            [raised]="true"
+        ></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="showEditDialog"
+    [header]="'עריכת תורם: ' + (selectedDonor?.firstName || '') + ' ' + (selectedDonor?.lastName || '')" [modal]="true"
+    [style]="{ width: '90vw', maxWidth: '500px' }" (onHide)="resetEditForm()">
+    <div class="dialog-content" *ngIf="selectedDonor">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="dlg-edit-firstName">שם פרטי</label>
+                <input pInputText id="dlg-edit-firstName" type="text" placeholder="שם פרטי"
+                    [(ngModel)]="selectedDonor.firstName" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-lastName">שם משפחה</label>
+                <input pInputText id="dlg-edit-lastName" type="text" placeholder="שם משפחה"
+                    [(ngModel)]="selectedDonor.lastName" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-email">אימייל</label>
+                <input pInputText id="dlg-edit-email" type="email" placeholder="אימייל"
+                    [(ngModel)]="selectedDonor.email" class="w-full" />
+            </div>
+            <div class="form-group">
+                <label for="dlg-edit-phone">טלפון</label>
+                <input pInputText id="dlg-edit-phone" type="text" placeholder="טלפון"
+                    [(ngModel)]="selectedDonor.phone" class="w-full" />
+            </div>
+        </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <p-button label="ביטול" icon="pi pi-times" (onClick)="showEditDialog = false" severity="secondary"
+            [outlined]="true"></p-button>
+        <p-button label="שמור שינויים" icon="pi pi-save" (onClick)="saveUpdate()" severity="info"
+            [raised]="true"></p-button>
+    </ng-template>
+</p-dialog>

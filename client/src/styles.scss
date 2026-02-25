@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&family=Rubik:wght@500;700;800&display=swap');
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+:root {
+  --font-body: 'Assistant', 'Rubik', 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Rubik', 'Assistant', 'Segoe UI', Tahoma, sans-serif;
+  --brand-rose: #f472b6;
+  --brand-indigo: #6366f1;
+  --brand-amber: #f59e0b;
+  --shell-bg: #f8fafc;
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(148, 163, 184, 0.22);
+  --shadow-soft: 0 20px 50px -35px rgba(15, 23, 42, 0.5);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--shell-bg);
+  color: var(--text-color, #0f172a);
+}
+
